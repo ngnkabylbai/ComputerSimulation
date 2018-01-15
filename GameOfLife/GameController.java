@@ -31,23 +31,21 @@ class GameController implements Runnable {
     public void run() {
         while(true) {
             try {
-                printGrid();
-                Thread.sleep(1000);
+                getGrid().invalidate();
+                getGrid().printGrid();
+                Thread.sleep(1000);    
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public synchronized WhatToDoEnum whatToDo(Cell cell) {
-        WhatToDoEnum todo = WhatToDoEnum.Live;
-        
-
-
-        return todo;
+    void start() {
+        // grid.start();
+        this.run();
     }
 
-    void revive(int x, int y) {
+    void revive(int y, int x) {
         getGrid().revive(x, y);
     }
 

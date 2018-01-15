@@ -1,6 +1,6 @@
 
 enum WhatToDoEnum {
-    Live,
-    Die,
-    Revive
+    LIVE,
+    DIE,
+    REVIVE
 }
