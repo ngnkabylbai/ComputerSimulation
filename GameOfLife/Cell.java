@@ -1,45 +1,55 @@
+import java.lang.Thread;
 
-import java.lang.Runnable;
-
-class Cell implements Runnable {
+class Cell extends Thread {
 
     private int x = -1;
     private int y = -1;
 
-    private boolean isAlive = false;
+    private boolean isCellAlive = false;
     private WhatToDoEnum whatToDo = WhatToDoEnum.DIE;
 
-    Cell (int x, int y) {
+    private Grid grid;
+
+    Cell (int x, int y, Grid grid) {
         this.x = x;
         this.y = y;
+        this.grid = grid;
     }
 
     @Override
-    public void run() {
-        // while (true) {
-            // WhatToDoEnum todo = GameController.getInstance().whatToDo(this);
-            
-            // switch (todo) {
-                // case LIVE: continue;
-                // case DIE: ;
-                // case REVIVE: ;  
-            // }
-        // }
+    public void start() {
+
+        while(true) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            whatToDo = grid.obtainWhatToDo(this);
+            invalidate();
+
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
-    void invalidate () {
-        if(isAlive && whatToDo == WhatToDoEnum.DIE) {
-            isAlive = false;
-        } else if(!isAlive && whatToDo == WhatToDoEnum.REVIVE) {
-            isAlive = true;
+    private void invalidate () {
+        if(isCellAlive && whatToDo == WhatToDoEnum.DIE) {
+            isCellAlive = false;
+        } else if(!isCellAlive && whatToDo == WhatToDoEnum.REVIVE) {
+            isCellAlive = true;
         }
     }
 
     void setWhatToDo(WhatToDoEnum whatToDo) { this.whatToDo = whatToDo; }
 
-    boolean isAlive() { return isAlive; }
+    boolean isCellAlive() { return isCellAlive; }
 
-    void revive() { this.isAlive = true; }
+    void revive() { this.isCellAlive = true; }
 
     int getX() { return x; }
 

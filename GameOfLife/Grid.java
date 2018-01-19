@@ -8,10 +8,13 @@ import java.lang.String;
     private int generation = 0;
     private int multi = 3; 
 
-    Grid (int size) {
+    private GameController controller;
+
+    Grid (int size, GameController controller) {
         if(size <= 10)
             this.size = 10;        
         this.size = size;
+        this.controller = controller;
         initializeGrid(size);
     }
 
@@ -20,7 +23,7 @@ import java.lang.String;
         this.grid = new Cell[getRowCount()][getColumnCount()];
         for (int y = 0; y < getRowCount(); y++) {
             for (int x = 0; x < getColumnCount(); x++) {
-                this.grid[y][x] = new Cell(y, x);
+                this.grid[y][x] = new Cell(y, x, this);
             }
         }
     }
@@ -29,7 +32,7 @@ import java.lang.String;
         for (int y = 0; y < getRowCount(); y++) {
             for (int x = 0; x < getColumnCount(); x++) {
                 if(isCellALive(x, y)) {
-                    grid[y][x].run();
+                    grid[y][x].start();
                 }
             }
         }
@@ -49,49 +52,34 @@ import java.lang.String;
         grid[y][x] = null;
     }
 
-    void invalidate() {
+    public synchronized WhatToDoEnum obtainWhatToDo(Cell cell) {
+        
         WhatToDoEnum todo;
-        Cell[][] newGenerationList = grid; 
+        int x = cell.getX();
+        int y = cell.getY();
 
-        for (int y = 0; y < getRowCount(); y++) {
-            for (int x = 0; x < getColumnCount(); x++) {
-
-                boolean isCellALive = isCellALive(x, y);
-                int aliveNeighbours = 0;
-                aliveNeighbours += isCellALive(x+1, y) ? 1 : 0; // right
-                aliveNeighbours += isCellALive(x, y+1) ? 1 : 0; // bottom
-                aliveNeighbours += isCellALive(x-1, y) ? 1 : 0; // left
-                aliveNeighbours += isCellALive(x, y-1) ? 1 : 0; // bottom
-                aliveNeighbours += isCellALive(x+1, y+1) ? 1 : 0; // right-bottom
-                aliveNeighbours += isCellALive(x-1, y-1) ? 1 : 0; // left-up
-                aliveNeighbours += isCellALive(x+1, y-1) ? 1 : 0; // right-up
-                aliveNeighbours += isCellALive(x-1, y+1) ? 1 : 0; // right-bottom
-                
-                if(!isCellALive && aliveNeighbours == 3) {
-                    todo = WhatToDoEnum.REVIVE;
-                } else if(isCellALive && (aliveNeighbours < 2 || aliveNeighbours > 3)) {
-                    todo = WhatToDoEnum.DIE;
-                } else if(isCellALive) {
-                    todo = WhatToDoEnum.LIVE;
-                } else {
-                    todo = WhatToDoEnum.DIE;
-                }
-                
-
-                newGenerationList[y][x].setWhatToDo(todo);
-            }
+        boolean isCellALive = isCellALive(x, y);
+        int aliveNeighbours = 0;
+        
+        aliveNeighbours += isCellALive(x+1, y) ? 1 : 0; // right
+        aliveNeighbours += isCellALive(x, y+1) ? 1 : 0; // bottom
+        aliveNeighbours += isCellALive(x-1, y) ? 1 : 0; // left
+        aliveNeighbours += isCellALive(x, y-1) ? 1 : 0; // bottom
+        aliveNeighbours += isCellALive(x+1, y+1) ? 1 : 0; // right-bottom
+        aliveNeighbours += isCellALive(x-1, y-1) ? 1 : 0; // left-up
+        aliveNeighbours += isCellALive(x+1, y-1) ? 1 : 0; // right-up
+        aliveNeighbours += isCellALive(x-1, y+1) ? 1 : 0; // right-bottom
+        
+        if(!isCellALive && aliveNeighbours == 3) {
+            todo = WhatToDoEnum.REVIVE;
+        } else if(isCellALive && (aliveNeighbours < 2 || aliveNeighbours > 3)) {
+            todo = WhatToDoEnum.DIE;
+        } else if(isCellALive) {
+            todo = WhatToDoEnum.LIVE;
+        } else {
+            todo = WhatToDoEnum.DIE;
         }
-        grid = getNewGeneration(newGenerationList);
-    }
-
-    private Cell[][] getNewGeneration(Cell[][] generation) {
-        for (int y = 0; y < getRowCount(); y++) {
-            for (int x = 0; x < getColumnCount(); x++) {
-                generation[y][x].invalidate();
-            }
-        }
-
-        return generation;
+        return todo;
     }
 
     boolean isCellALive(int x, int y) {

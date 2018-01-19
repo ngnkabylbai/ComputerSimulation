@@ -1,8 +1,8 @@
 
 import java.util.ArrayList;
-import java.lang.Runnable;
+import java.lang.Thread;
 
-class GameController implements Runnable {
+class GameController extends Thread {
     private Grid grid;
     private static volatile GameController instance;
 
@@ -24,25 +24,19 @@ class GameController implements Runnable {
             System.out.println("Illegal size. Minimum size is 10");
             return;
         }
-        setGrid(new Grid(size));
+        setGrid(new Grid(size, this));
     }
 
     @Override
-    public void run() {
+    public void start() {
         while(true) {
             try {
-                getGrid().invalidate();
                 getGrid().printGrid();
                 Thread.sleep(1000);    
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    void start() {
-        // grid.start();
-        this.run();
     }
 
     void revive(int y, int x) {
