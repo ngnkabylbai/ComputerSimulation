@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.lang.String;
+import java.io.IOException;
 
  class Grid {
     
@@ -102,15 +103,17 @@ import java.lang.String;
         return checkCell.isAlive();
     }
 
-    void printGrid() {
+    void printGrid() throws InterruptedException, IOException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+
         String result = "Generation:"+(generation++)+" Grid size:"
             +size+"/"+multi*size+"\n";
         for(int y = 0; y < getRowCount(); y++) {
             for(int x = 0; x < getColumnCount(); x++) {
                 if(isCellALive(x, y)) {
-                    result += '@';
+                    result += "@ ";
                 } else {
-                    result += '-';
+                    result += "- ";
                 }
             }
             result += '\n';

@@ -1,6 +1,6 @@
-
 import java.util.ArrayList;
 import java.lang.Runnable;
+import java.io.IOException;
 
 class GameController implements Runnable {
     private Grid grid;
@@ -33,8 +33,10 @@ class GameController implements Runnable {
             try {
                 getGrid().invalidate();
                 getGrid().printGrid();
-                Thread.sleep(1000);    
+                Thread.sleep(300);    
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -47,10 +49,6 @@ class GameController implements Runnable {
 
     void revive(int y, int x) {
         getGrid().revive(x, y);
-    }
-
-    private void printGrid() {
-        getGrid().printGrid();
     }
 
     public Grid getGrid() {
