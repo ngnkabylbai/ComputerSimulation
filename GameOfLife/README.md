@@ -104,8 +104,6 @@ enum WhatToDoEnum {
 }
 ```
 
-[[https://github.com/ngnkabylbai/computer_simulation/tree/master/GameOfLife/screens/0.png|alt=generation0]]
-
-[[https://github.com/ngnkabylbai/computer_simulation/tree/master/GameOfLife/screens/37.png|alt=generation37]]
-
-[[https://github.com/ngnkabylbai/computer_simulation/tree/master/GameOfLife/screens/45.png|alt=generation45]]
+![generation 0](https://github.com/ngnkabylbai/computer_simulation/blob/master/GameOfLife/screens/0.PNG)
+![generation 37](https://github.com/ngnkabylbai/computer_simulation/blob/master/GameOfLife/screens/37.PNG)
+![generation 45](https://github.com/ngnkabylbai/computer_simulation/blob/master/GameOfLife/screens/45.PNG)
