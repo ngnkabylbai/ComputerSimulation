@@ -5,6 +5,8 @@ import java.lang.Thread;
 class GameController extends Thread {
     private Grid grid;
     private static volatile GameController instance;
+    private int aliveCount = 0;
+    private int aliveCounter = 0;
 
     public static GameController getInstance() {
         GameController localInstance  = instance;
@@ -28,14 +30,31 @@ class GameController extends Thread {
     }
 
     @Override
-    public void start() {
+    public synchronized void start() {
+        grid.begin();
         while(true) {
             try {
-                getGrid().printGrid();
-                Thread.sleep(1000);    
+                aliveCount = grid.getAliveCount();
+                if(aliveCount == 0) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+                grid.wakeUpAllAliveCells();
+                wait();
+
+                grid.printGrid();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public synchronized void ready() {
+        aliveCounter++;
+        if(aliveCount == aliveCounter) {
+            aliveCounter = 0;
+            this.notify();
         }
     }
 

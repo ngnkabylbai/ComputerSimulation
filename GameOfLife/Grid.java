@@ -16,6 +16,8 @@ import java.lang.String;
         this.size = size;
         this.controller = controller;
         initializeGrid(size);
+
+        System.out.print("Grid: initialized");   
     }
 
     private void initializeGrid(int size) {
@@ -24,16 +26,22 @@ import java.lang.String;
         for (int y = 0; y < getRowCount(); y++) {
             for (int x = 0; x < getColumnCount(); x++) {
                 this.grid[y][x] = new Cell(y, x, this);
+                this.grid[y][x].setController(controller);
             }
         }
     }
 
-    public void start() {
+    public void begin() {
+        System.out.println(getRowCount());   
+        System.out.println(getColumnCount());   
+        
         for (int y = 0; y < getRowCount(); y++) {
             for (int x = 0; x < getColumnCount(); x++) {
-                if(isCellALive(x, y)) {
+                    // System.out.println("Grid: checking..." + x + ":" +y);   
+                // if(isCellALive(x, y)) {
+                    // System.out.println("Alive:" + x + ":" +y);   
                     grid[y][x].start();
-                }
+                // }
             }
         }
     }
@@ -82,12 +90,34 @@ import java.lang.String;
         return todo;
     }
 
+    public int getAliveCount() {
+        int count = 0;
+        for (int y = 0; y < getRowCount(); y++) {
+            for (int x = 0; x < getColumnCount(); x++) {
+                if(isCellALive(x, y)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     boolean isCellALive(int x, int y) {
         if(x < 0 || y < 0 || x >= getColumnCount() || y >= getRowCount())
             return false;
         
         Cell checkCell = grid[y][x];
         return checkCell.isAlive();
+    }
+
+    public void wakeUpAllAliveCells() {
+        for (int y = 0; y < getRowCount(); y++) {
+            for (int x = 0; x < getColumnCount(); x++) {
+                if(isCellALive(x, y)) {
+                    grid[y][x].notify();
+                }
+            }
+        }
     }
 
     void printGrid() {

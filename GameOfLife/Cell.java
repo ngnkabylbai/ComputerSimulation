@@ -7,6 +7,7 @@ class Cell extends Thread {
 
     private boolean isCellAlive = false;
     private WhatToDoEnum whatToDo = WhatToDoEnum.DIE;
+    private GameController controller;
 
     private Grid grid;
 
@@ -16,25 +17,32 @@ class Cell extends Thread {
         this.grid = grid;
     }
 
-    @Override
-    public void start() {
+    public void setController(GameController controller) {
+        this.controller = controller;
+    }
+
+    public synchronized final void run() {
 
         while(true) {
             try {
+                controller.ready();
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             whatToDo = grid.obtainWhatToDo(this);
-            invalidate();
+            controller.ready();
 
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+                
+            invalidate();
         }
+
     }
     
     private void invalidate () {
