@@ -22,7 +22,7 @@ public class RequestPool {
 
     public void addRequest(Request newRequest) {
         queue.add(newRequest);
-        System.out.println(name + " : weight-UP:" + getQueueWeight());
+        // System.out.println(name + " : weight-UP:" + getQueueWeight());
     }
 
     public Request peek() {
@@ -31,7 +31,7 @@ public class RequestPool {
 
     public void remove() {
         queue.remove();
-        System.out.println("Pool: weight-DOWN:" + getQueueWeight());
+        // System.out.println("Pool: weight-DOWN:" + getQueueWeight());
     }
 
     public boolean isEmpty() {

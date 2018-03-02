@@ -7,6 +7,7 @@ public class RequestCreator extends Thread {
     // private RequestPool requestPool;
     private Coordinator coordinator;
     private Random random;
+    public static int requestCount = 100;
 
     public RequestCreator(Coordinator coordinator) {
         // this.requestPool = requestPool;
@@ -15,17 +16,16 @@ public class RequestCreator extends Thread {
     }
 
     public void run () {
-        System.out.println("Request creator started...");
-        int counter = 5;
+        // System.out.println("Request creator started...");
         try {
-            while(true) {
+            while(--requestCount > -1) {
                 Request newRequest = new Request(random.nextInt(9000)+1000);
                 // System.out.println("RequestCreator: Adding new request:" + newRequest.toString());                
                 coordinator.addRequest(newRequest);
-                System.out.println("RequestCreator: Added new request:" + newRequest.toString());
+                // System.out.println("RequestCreator: Added new request:" + newRequest.toString());
                 
                 int waitTime = random.nextInt(1000)+1000;
-                System.out.println("RequestCreator: waiting " + waitTime +"..."); 
+                // System.out.println("RequestCreator: waiting " + waitTime +"..."); 
                 Thread.sleep(1000);
             }
         } catch (InterruptedException e) {

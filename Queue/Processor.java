@@ -27,13 +27,13 @@ public class Processor extends Thread {
                 
                 Request servingRequest = (Request) requestPool.peek(); // get top request from queue
 
-                System.out.println(name + ". Serving...:" + servingRequest.toString()); // log
+                // System.out.println(name + ". Serving...:" + servingRequest.toString()); // log
 
                 int servingTime = servingRequest.getWeight() / cpu * 1000;
                 Thread.sleep(servingTime);  // service the request
 
                 requestPool.remove();
-                System.out.println(name + ": DONE : " + servingRequest.toString());
+                // System.out.println(name + ": DONE : " + servingRequest.toString());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
